@@ -13,6 +13,10 @@ int main(int argc, char *argv[])
   for(i = 0; argv[1][i] != '\0'; i++)
     {
       char letter = argv[1][i];
+      if(letter < 97)
+	{
+	  letter = letter + 32;
+	}
       // Compiler marks where switch statement starts
       // We call this location Y
       // Evaluates switch(letter) to come up with number (argv[1][i])
@@ -25,36 +29,36 @@ int main(int argc, char *argv[])
 	  // This is why we use break
 	  // When it hits break, it exits the switch statement
 	case 'a':
-	case 'A':
-	  printf("%d: 'A'\n", i);
+	  //case 'A':
+	  printf("%d: 'a'\n", i);
 	  break;
 
 	case 'e':
-	case 'E':
-	  printf("%d: 'E'\n", i);
+	  //case 'E':
+	  printf("%d: 'e'\n", i);
 	  break;
 
 	case 'i':
-	case 'I':
-	  printf("%d: 'I'\n", i);
+	  //case 'I':
+	  printf("%d: 'i'\n", i);
 	  break;
 
 	case 'o':
-	case 'O':
-	  printf("%d: 'O'\n", i);
+	  //case 'O':
+	  printf("%d: 'o'\n", i);
 	  break;
 
 	case 'u':
-	case 'U':
-	  printf("%d: 'U'\n", i);
+	  //case 'U':
+	  printf("%d: 'u'\n", i);
 	  break;
 
 	case 'y':
-	case 'Y':
+	  //case 'Y':
 	  if(i > 2)
 	    {
 	      // It's only sometimes y
-	      printf("%d: 'Y'\n", i);
+	      printf("%d: 'y'\n", i);
 	    }
 	  break;
 
