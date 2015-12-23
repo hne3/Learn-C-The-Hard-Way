@@ -21,6 +21,10 @@ int main(int argc, char *argv[])
   i = num_states; // watch for this
   while(i > 0)
     {
+      if(i <= argc)
+	{
+	  states[num_states - i] = argv[num_states - i];
+	} 
       printf("state %d: %s\n", num_states - i + 1, states[num_states - i]);
       i--;
     }
