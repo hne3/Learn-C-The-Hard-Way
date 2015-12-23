@@ -3,11 +3,11 @@
 int main(int argc, char *argv[])
 {
   // go through each string in argv
-  int i = 0;
-  while(i < argc)
+  int i = argc;
+  while(i > 0)
     {
-      printf("arg %d: %s\n", i, argv[i]);
-      i++;
+      printf("arg %d: %s\n", argc - i + 1, argv[argc - i]);
+      i--;
     }
 
   // making array of strings
@@ -18,11 +18,11 @@ int main(int argc, char *argv[])
     };
 
   int num_states = 4;
-  i = 0; // watch for this
-  while(i < num_states)
+  i = num_states; // watch for this
+  while(i > 0)
     {
-      printf("state %d: %s\n", i, states[i]);
-      i++;
+      printf("state %d: %s\n", num_states - i + 1, states[num_states - i]);
+      i--;
     }
 
   return 0;
