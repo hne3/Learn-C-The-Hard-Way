@@ -1,3 +1,4 @@
+
 CFLAGS=-Wall -g
 
 all:
@@ -5,8 +6,19 @@ all:
 	ex3
 	ex4
 	ex5
+	ex6
+	ex7
+	ex8
+	ex9
+	ex10
+	ex11
+	ex12
+	ex13
+	ex14
+	ex15
+	ex16
+	ex16_no_pointers
+
+.PHONY: clean
 clean:
-	rm -f ex1
-	rm -f ex3
-	rm -f ex4
-	rm -f ex5
+	-rm -f $(all)
