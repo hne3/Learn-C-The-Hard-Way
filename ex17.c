@@ -119,7 +119,7 @@ void Database_write(struct Connection *conn)
     }
 
   rc = fflush(conn->file);
-  if(rc != -1)
+  if(rc == -1)
     {
       die("Cannot flush database.");
     }
@@ -235,6 +235,7 @@ int main(int argc, char *argv[])
 	{
 	  die("Need an id to get");
 	}
+      Database_get(conn, id);
       break;
 
     case 's':
@@ -251,7 +252,7 @@ int main(int argc, char *argv[])
 	{
 	  die("Need id to delete");
 	}
-      Database_set(conn, id, argv[4], argv[5]);
+      Database_delete(conn, id);
       Database_write(conn);
       break;
 
