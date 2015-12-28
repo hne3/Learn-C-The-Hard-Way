@@ -56,6 +56,7 @@ int *bubble_sort(int *numbers, int count, compare_cb cmp)
 }
 
 // Why not int pointers?
+// These are all of type compare_cb
 int sorted_order(int a, int b)
 {
   return a - b;
@@ -97,6 +98,15 @@ void test_sorting(int *numbers, int count, compare_cb cmp)
   printf("\n");
 
   free(sorted);
+
+  unsigned char *data = (unsigned char *)cmp;
+
+  for(i = 0; i < 25; i++)
+    {
+      printf("%02x:", data[i]);
+    }
+  
+  printf("\n");
 }
 
 int main(int argc, char *argv[])
