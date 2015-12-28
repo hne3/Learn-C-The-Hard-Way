@@ -22,7 +22,7 @@ int Object_init(void *self);
 void Object_destroy(void *self);
 void Object_describe(void *self);
 void *Object_move(void *self, Direction direction);
-void Object_attack(void *self, int damage);
+int Object_attack(void *self, int damage);
 void *Object_new(size_t size, Object proto, char *description);
 
 // Makes a macro to work like a template fxn that spits out code on the right
