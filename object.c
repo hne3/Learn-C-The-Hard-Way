@@ -6,6 +6,7 @@
 
 void Object_destroy(void *self)
 {
+  assert(self != NULL);
   Object *obj = self;
 
   // If obj != NULL
@@ -22,12 +23,14 @@ void Object_destroy(void *self)
 
 void Object_describe(void *self)
 {
+  assert(self != NULL);
   Object *obj = self;
   printf("%s.\n", obj->description);
 }
 
 int Object_init(void *self)
 {
+  assert(self != NULL);
   // Do nothing really
   // Why?
   return 1;
@@ -35,6 +38,7 @@ int Object_init(void *self)
 
 void *Object_move(void *self, Direction direction)
 {
+  assert(self != NULL);
   printf("You can't go that direction.\n");
   // Why return if fxn is void?
   return NULL;
@@ -42,12 +46,14 @@ void *Object_move(void *self, Direction direction)
 
 int Object_attack(void *self, int damage)
 {
+  assert(self != NULL);
   printf("You can't attack that.\n");
   return 0;
 }
 
 void *Object_new(size_t size, Object proto, char *description)
 {
+  assert(description != NULL);
   // Set up default fxns in case they aren't set
   if(!proto.init)
     {
@@ -73,12 +79,14 @@ void *Object_new(size_t size, Object proto, char *description)
   // This seems weird, but we can make a struct of one size,
   // then point a different pointer at it to "cast" it
   Object *el = calloc(1, size);
+  assert(el != NULL);
   // What is calloc?
   *el = proto;
 
   // copy the description over
   el->description = strdup(description);
-
+  assert(description != NULL);
+  
   // initialize it with whatever init we were given
   if(!el->init(el))
     {
