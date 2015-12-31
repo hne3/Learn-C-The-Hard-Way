@@ -2,9 +2,11 @@
 #include <string.h>
 #include "dbg.h"
 #include "unroll.h"
+#include <time.h>
 
 int normal_copy(char *from, char *to, int count)
 {
+  clock_t start = clock(), diff;
   int i = 0;
 
   for(i = 0; i < count; i++)
@@ -12,11 +14,15 @@ int normal_copy(char *from, char *to, int count)
       to[i] = from[i];
     }
 
+  diff = clock() - start;
+  printf("Normal copy time: %ld ms\n", diff * 1000 / CLOCKS_PER_SEC);
   return i;
 }
 
 int duffs_device(char *from, char *to, int count)
 {
+  clock_t start = clock();
+  clock_t diff;
   {
     int n = (count + 7) / 8;
 
@@ -37,11 +43,16 @@ int duffs_device(char *from, char *to, int count)
       }
   }
 
+  diff = clock() - start;
+  printf("Duff's device time: %ld ms\n", diff * 1000 / CLOCKS_PER_SEC);
+  
   return count;
 }
 
 int zeds_device(char *from, char *to, int count)
 {
+  clock_t start = clock();
+  clock_t diff;
   {
     int n = (count + 7) / 8;
 
@@ -60,6 +71,8 @@ int zeds_device(char *from, char *to, int count)
 	if(--n > 0) goto again;
       }
   }
+  diff = clock() - start;
+  printf("Zed's device time: %ld ms\n", (1000 * diff) / CLOCKS_PER_SEC);
   return count;
 }
 
@@ -79,6 +92,8 @@ int valid_copy(char *data, int count, char expects)
 
 int duffs_device_32(char *from, char *to, int count)
 {
+  clock_t start = clock();
+  clock_t diff;
   {
     int n = (count + 31) / 32;
 
@@ -95,6 +110,8 @@ int duffs_device_32(char *from, char *to, int count)
 	  } while(--n > 0);
       }
   }
+  diff = clock() - start;
+  printf("Duff's 32 device time: %ld ms\n", diff * 1000 / CLOCKS_PER_SEC);
   return count;
 }
 
