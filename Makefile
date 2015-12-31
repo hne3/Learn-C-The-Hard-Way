@@ -1,14 +1,13 @@
-CFLAGS=-Wall -g
+CFLAGS=-Wall -g -DNDEBUG
 
 all:
-	ex19
+	ex22_main
 
-ex19: object.o
+ex22.o: ex22.h ex22.c
 
-test: test.bash
+ex22_main: ex22_main.c ex22.o 
 
 .PHONY: clean
 clean:
-	-rm -f ex19
-	-rm -f object.o
-	-rm -f test.bash
+	-rm -f ex22_main
+	-rm -f ex22.o
