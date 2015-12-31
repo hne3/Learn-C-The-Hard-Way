@@ -2,7 +2,7 @@
 #define __unroll_h__
 
 #define DUFF(x, y) \
-  case ((x ## y) + 1) : *to++ = *from++
+  case ((8 * x + y) + 1) : *to++ = *from++
 
 #define SEVEN_AT_ONCE(x) \
   DUFF(x, 6);					\
