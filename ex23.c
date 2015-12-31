@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "dbg.h"
+#include "unroll.h"
 
 int normal_copy(char *from, char *to, int count)
 {
@@ -76,6 +77,27 @@ int valid_copy(char *data, int count, char expects)
   return 1;
 }
 
+int duffs_device_32(char *from, char *to, int count)
+{
+  {
+    int n = (count + 31) / 32;
+
+    switch(count % 32)
+      {
+      case 0:
+	do
+	  {
+	    *to++ = *from++;
+	    SEVEN_AT_ONCE(3);
+	    EIGHT_AT_ONCE(2);
+	    EIGHT_AT_ONCE(1);
+	    EIGHT_AT_ONCE(0);
+	  } while(--n > 0);
+      }
+  }
+  return count;
+}
+
 int main(int argc, char *argv[])
 {
   char from[1000] = {'a'};
@@ -106,6 +128,11 @@ int main(int argc, char *argv[])
   check(rc == 1000, "Zed's device failed: %d", rc);
   check(valid_copy(to, 1000, 'x'), "Zed's device failed copy.");
 
+  // 32 version
+  rc = duffs_device_32(from, to, 1000);
+  check(rc == 1000, "Duff's 32 failed: %d", rc);
+  check(valid_copy(to, 1000, 'x'), "Duff's 32 device failed copy.");
+  
   return 0;
 
  error:
