@@ -52,13 +52,12 @@ int print_custom(const char *fmt, ...)
   int i = 0;
   int counter = 0;
   
-  char *final_string = calloc(1, MAX_DATA);
-  char *segments = calloc(1, MAX_DATA);
+  char *final_string = ""; // = calloc(1, MAX_DATA);
+  char *segments = ""; //calloc(1, MAX_DATA);
   char *tmp = calloc(1, MAX_DATA);
 
   strcpy(tmp, fmt);
   segments = strtok(tmp, "%");
-  tmp = NULL;
   
   va_list argp;
   va_start(argp, fmt);
@@ -71,18 +70,18 @@ int print_custom(const char *fmt, ...)
 	  switch(fmt[i])
 	    {
 	    case 'd':
-	      strncpy(final_string, segments, MAX_DATA);
+	      strncat(final_string, segments, MAX_DATA);
 	      segments = strtok(NULL, "%");
 	      sprintf(tmp, "%d", va_arg(argp, int));
 	      strncat(final_string, tmp, MAX_DATA);
 	    break;
 	    case 's':
-	      strncpy(final_string, segments, MAX_DATA);
+	      strncat(final_string, segments, MAX_DATA);
 	      segments = strtok(NULL, "%");
-	      strncat(final_string, *va_arg(argp, char **), MAX_DATA);
+	      strncat(final_string, va_arg(argp, char*), MAX_DATA);
 	      break;
 	    case 'c':
-	      strncpy(final_string, segments, MAX_DATA);
+	      strncat(final_string, segments, MAX_DATA);
 	      segments = strtok(NULL, "%");
 	      sprintf(tmp, "%c", va_arg(argp, int));
 	      strncat(final_string, tmp, MAX_DATA);
@@ -93,13 +92,18 @@ int print_custom(const char *fmt, ...)
 	    }
 	  counter++;
 	}
-      strncpy(final_string, segments, MAX_DATA);
+      if(segments)
+	{
+	  if(final_string)
+	    {
+	      strncat(final_string, segments, MAX_DATA);
+	    }
+	}
     }
   // Actually write the output
   puts(final_string);
   // Free all memory blocks
   free(tmp);
-  free(segments);
   free(final_string);
   
   return 0;
