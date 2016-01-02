@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 #include "dbg.h"
 
 #define MAX_DATA 100
@@ -46,6 +47,53 @@ int read_int(int *out_int)
   return -1;
 }
 
+int print_custom(const char *fmt, ...)
+{
+  int i = 0;
+  int counter = 0;
+  
+  char *final_string = calloc(1, MAX_DATA);
+  char *segments = calloc(1, MAX_DATA);
+  char *tmp = calloc(1, MAX_DATA);
+
+  strcpy(tmp, fmt);
+  segments = strtok(tmp, '%');
+  tmp = NULL;
+  
+  va_list argp;
+  va_start(argp, fmt);
+
+  for(i = 0; fmt[i] != '\0'; i++)
+    {
+      if(fmt[i] == '%')
+	{
+	  i++;
+	  switch(fmt[i])
+	    {
+	    case 'd':
+	      strncpy(final_string, segments[counter], MAX_DATA);
+	      sprintf(tmp, "%d", *va_arg(argp, int *));
+	      strncat(final_string, tmp, MAX_DATA);
+	    break;
+	    case 's':
+	      strncpy(final_string, segments[counter], MAX_DATA);
+	      strncat(final_string, **va_arg(argp, char **), MAX_DATA);
+	      break;
+	    case 'c':
+	      strncpy(final_string, segments[counter], MAX_DATA);
+	      sprintf(tmp, "%c", *va_arg(argp, char *));
+	      strncat(final_string, tmp, MAX_DATA);
+	      break;
+	    default:
+	      log_err("Not a valid format.");
+	      return 1;
+	    }
+	  counter++;
+	}
+      strncpy(final_string, segments[counter], MAX_DATA);
+    }
+  return 0;
+}
 int read_scan(const char *fmt, ...)
 {
   int i = 0;
@@ -136,6 +184,10 @@ int main(int argc, char *argv[])
   printf("Initial: '%c'\n", initial);
   printf("Last name: %s", last_name);
   printf("Age: %d\n", age);
+  print_custom("Hello\n");
+  print_custom("Int test: %d\n", 2);
+  print_custom("Char test: %c\n", 'c');
+  print_custom("String test: %s\n", "hello");
 
   free(first_name);
   free(last_name);
