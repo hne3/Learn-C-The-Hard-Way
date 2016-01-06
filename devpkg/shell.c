@@ -2,6 +2,8 @@
 #include "dbg.h"
 #include <stdarg.h>
 
+// Load up shell template with specified arguments, then use
+// Shell_run to actually execute those commands in the shell
 int Shell_exec(Shell template, ...)
 {
   apr_pool_t *p = NULL;
@@ -11,6 +13,7 @@ int Shell_exec(Shell template, ...)
   const char *key = NULL;
   const char *arg = NULL;
   int i = 0;
+  int num_args = 0;
 
   rv = apr_pool_create(&p, NULL);
   check(rv == APR_SUCCESS, "Failed to create pool.");
@@ -24,18 +27,22 @@ int Shell_exec(Shell template, ...)
     {
       // Alternate arg list: key arg key arg key arg
       arg = va_arg(argp, const char *);
-
+      // Go through the template's arg list and find the args you need
+      // to replace
       for(i = 0; template.args[i] != NULL; i++)
 	{
 	  if(strcmp(template.args[i], key) == 0)
 	    {
 	      // Replace key label with actual arg value if found
 	      template.args[i] = arg;
+	      num_args++;
 	      break; // found it
 	    }
 	}
+      // Not entirely sure what I'm supposed to do with this
+      template->num_args = num_args;
     }
-
+  // Execute commands in shell
   rc = Shell_run(p, &template);
   apr_pool_destroy(p);
   va_end(argp);
@@ -46,6 +53,8 @@ int Shell_exec(Shell template, ...)
   return rc;
 }
 
+// Run commands in specified shell, pool memory resources in same pool
+// as the shell itself
 int Shell_run(apr_pool_t *p, Shell *cmd)
 {
   apr_procattr_t *attr;
@@ -64,9 +73,10 @@ int Shell_run(apr_pool_t *p, Shell *cmd)
   rv = apr_procattr_cmdtype_Set(attr, APR_PROGRAM_PATH);
   check(rv == APR_SUCCESS, "Failed to set command type.");
 
+  // Actually run the command specified in arg list
   rv = apr_proc_create(&newproc, cmd->exe, cmd->args, NULL, attr, p);
   check(rv == APR_SUCCESS, "Failed to run command.");
-
+  
   rv = apr_proc_wait(&newproc, &cmd->exit_code, &cmd->exit_why, APR_WAIT);
   check(rv == APR_CHILD_DONE, "Failed to wait.");
 
@@ -102,7 +112,7 @@ Shell GIT_SH =
 Shell TAR_SH =
   {
     .exe = "tar",
-    .dir = "/tmp",
+    .dir = "/tmp/pkg-build",
     .args =
     {
       "tar", "-xzf", "FILE", "--strip-components", "1", NULL
@@ -122,7 +132,7 @@ Shell CURL_SH =
 Shell CONFIGURE_SH =
   {
     .exe = "./configure",
-    .dir = "/tmp",
+    .dir = "/tmp/pkg-build",
     .args =
     {
       "configure", "OPTS", NULL
