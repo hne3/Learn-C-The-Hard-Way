@@ -68,6 +68,7 @@ int DB_find(const char *url)
   data = DB_load();
   check(data, "Failed to load: %s", DB_FILE);
 
+  // Try to find contents of line in data
   if(binstr(data, 0, line) == BSTR_ERR)
     {
       res = 0;
